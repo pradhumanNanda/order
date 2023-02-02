@@ -73,4 +73,30 @@ public class OrderController {
         return response;
     }
 
+    @PutMapping("/update")
+    public BaseEntityResponse updateOrder(@RequestBody Order order){
+        BaseEntityResponse<Order> response;
+        try {
+            Order updatedOrder = orderService.updateOrder(order);
+            response =OrderResponse.getSuccessResponse(String.format("Successfully updated order for orderId : %s",
+                    order.getOrderId()));
+            response.setEntity(updatedOrder);
+        } catch (UserNotFoundException e) {
+            response = OrderResponse.getFailedResponse(e.getMessage());
+        }
+        return response;
+    }
+
+    @DeleteMapping("/delete")
+    public BaseEntityResponse<Order> deleteOrder(@RequestParam String orderId){
+        BaseEntityResponse<Order> response;
+        try {
+            orderService.deleteOrder(orderId);
+            response = OrderResponse.getSuccessResponse(String.format("successfully deleted order for id : %s", orderId));
+        } catch (RuntimeException e){
+            response = OrderResponse.getFailedResponse(e.getMessage());
+        }
+        return response;
+    }
+
 }
