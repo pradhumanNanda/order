@@ -8,7 +8,6 @@ import java.util.Base64;
 
 public class PasswordManager {
 
-
         static final String algorithm = "AES/ECB/PKCS5Padding";
         static final String secret_key = "4gGNHy1n9Xc5GibNT1pnpA==";
 

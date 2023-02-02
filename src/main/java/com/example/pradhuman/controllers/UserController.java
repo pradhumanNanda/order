@@ -38,7 +38,7 @@ public class UserController {
         BaseEntityResponse<User> response = new UserResponse(users);
         response.setStatusCode(BaseEntityResponse.SUCCESS);
         if(users.size() > 0){
-            response.setStatusReason("yelo");
+            response.setStatusReason(String.format("Found %s users", users.size()));
         }else {
             response.setStatusReason("No user Found");
         }
@@ -61,7 +61,13 @@ public class UserController {
     @PutMapping("/update")
     public BaseEntityResponse updateUser(@RequestBody User user){
         BaseEntityResponse<User> response;
-        User updatedUser = userService.updateUser(user);
+        User updatedUser = null;
+        try {
+            updatedUser = userService.updateUser(user);
+        } catch (ValidationException e) {
+            response = UserResponse.getFailedResponse("Validation error Email , mobile");
+            return response;
+        }
         if(updatedUser.isFound()){
             response = UserResponse.getSuccessResponse(String.format("user updated for id : %s", user.getUserId()));
             response.setEntity(updatedUser);

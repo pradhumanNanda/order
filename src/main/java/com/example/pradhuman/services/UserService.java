@@ -9,7 +9,7 @@ public interface UserService {
     User getById(String id);
     List<User> getAllUsers();
     User addUser(User user) throws ValidationException;
-    User updateUser(User user);
+    User updateUser(User user) throws ValidationException;
     boolean deleteUser(String id);
 
 
