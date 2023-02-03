@@ -22,7 +22,7 @@ public class OrderController {
     public BaseEntityResponse createOrder(@RequestBody Order order) {
         BaseEntityResponse response;
         try {
-            order.setStatus(OrderStatus.NEW);
+            order.setStatus(OrderStatus.NEW.getStatus());
             orderService.createOrder(order);
             response = OrderResponse.getSuccessResponse(String.format("order created successfully for id : %s",
                     order.getOrderId()));

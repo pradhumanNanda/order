@@ -1,10 +1,10 @@
 package com.example.pradhuman.entities;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 
 @Data
-@SuperBuilder
+@Builder
 public class Item {
 
     private String category;

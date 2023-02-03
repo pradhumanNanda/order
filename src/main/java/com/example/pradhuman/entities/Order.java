@@ -2,10 +2,9 @@ package com.example.pradhuman.entities;
 
 import com.example.pradhuman.utils.Jutil;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -15,13 +14,14 @@ import java.util.List;
 @Entity(name = "order1")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Data
-@SuperBuilder
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Order {
 
     @Id
     @Column(name = "order_id", updatable = false, nullable = false)
     private String orderId;
+
 
     private String userId;
 
@@ -37,14 +37,18 @@ public class Order {
 
     private double totalAmount;
 
+    public Order() {
+
+    }
+
     public void setUserId(String userId) {
         if(Jutil.isNullOrEmpty(userId))
             this.userId = userId;
     }
 
-    public void setStatus(OrderStatus status) {
-        if(Jutil.isNullOrEmpty(status.getStatus()))
-            this.status = status;
+    public void setStatus(String status) {
+        if(Jutil.isNullOrEmpty(status))
+            this.status = OrderStatus.getOrderStatus(status);
     }
 
     public void setItems(List<Item> items) {

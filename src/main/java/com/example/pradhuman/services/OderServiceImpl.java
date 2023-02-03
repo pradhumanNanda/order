@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class OderServiceImpl implements OrderService{
+public class OderServiceImpl implements OrderService {
 
     @Autowired
     OrderRepository orderRepository;
@@ -28,14 +28,14 @@ public class OderServiceImpl implements OrderService{
 
     @Override
     public Order createOrder(Order order) throws UserNotFoundException {
-         if(userRepository.findById(order.getUserId()).isPresent())
+         if(!userRepository.findById(order.getUserId()).isPresent())
              throw new UserNotFoundException(String.format("User not found for id : %s", order.getUserId()));
         if(Jutil.isPriceValid(order)){
             order.setOrderId(UUID.randomUUID().toString());
-            order.setStatus(OrderStatus.SUCCESS);
+            order.setStatus(OrderStatus.SUCCESS.getStatus());
             orderRepository.save(order);
         }else {
-            order.setStatus(OrderStatus.FAIL);
+            order.setStatus(OrderStatus.FAIL.getStatus());
             throw new RuntimeException("Price Validation Failed price should be > 0");
         }
         return order;
@@ -59,7 +59,7 @@ public class OderServiceImpl implements OrderService{
          userRepository.findById(order.getUserId()).isPresent()){
             Order oldOrder = orderRepository.findById(order.getOrderId()).get();
             Jutil.getUpdatedOrder(oldOrder, order);
-            if(oldOrder.getStatus() == OrderStatus.FAIL)
+            if(oldOrder.getStatus().equals(OrderStatus.FAIL))
                 throw new RuntimeException("Items price Validation failed. price should be > 0");
         }
         throw new UserNotFoundException(String.format("Oder or user for orderId : %s and userId : %s not found",

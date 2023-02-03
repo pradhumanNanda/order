@@ -51,7 +51,7 @@ public class Jutil {
         if(order.getItems().size() > 0){
             for(Item i : order.getItems()){
                 if(i.getPrice() > 0){
-                    totalAmount += i.getPrice();
+                    totalAmount += i.getPrice() * i.getQuantity();
                 }else {
                     return false;
                 }
@@ -134,9 +134,9 @@ public class Jutil {
             oldOrder.setItems(items);
         }
         if (isPriceValid(oldOrder)){
-            oldOrder.setStatus(OrderStatus.SUCCESS);
+            oldOrder.setStatus(OrderStatus.SUCCESS.getStatus());
         }else {
-            oldOrder.setStatus(OrderStatus.FAIL);
+            oldOrder.setStatus(OrderStatus.FAIL.getStatus());
         }
         return oldOrder;
     }
