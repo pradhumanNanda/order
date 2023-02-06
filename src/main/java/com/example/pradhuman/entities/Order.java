@@ -42,12 +42,12 @@ public class Order {
     }
 
     public void setUserId(String userId) {
-        if(Jutil.isNullOrEmpty(userId))
+        if(!Jutil.isNullOrEmpty(userId))
             this.userId = userId;
     }
 
     public void setStatus(String status) {
-        if(Jutil.isNullOrEmpty(status))
+        if(!Jutil.isNullOrEmpty(status))
             this.status = OrderStatus.getOrderStatus(status);
     }
 
