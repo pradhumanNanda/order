@@ -84,8 +84,8 @@ public class UserController {
     }
 
     @ExceptionHandler({DataIntegrityViolationException.class})
-    public String uniqueKeyVoilation(){
-        return new RuntimeException("Email should be unique").getMessage();
+    public BaseEntityResponse uniqueKeyVoilation(){
+        return BaseEntityResponse.getFailedResponse("Email should be unique");
     }
 
 }
