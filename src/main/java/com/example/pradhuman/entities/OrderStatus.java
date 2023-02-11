@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum OrderStatus {
-    NEW("New"),SUCCESS("Success"),FAIL("Fail");
+    NEW("New"),SUCCESS("Success"),FAIL("Fail"),CANCELED("Canceled");
 
     private String status;
 
@@ -21,6 +21,8 @@ public enum OrderStatus {
                 return OrderStatus.SUCCESS;
             case "Fail":
                 return OrderStatus.FAIL;
+            case "Cancel":
+                return OrderStatus.CANCELED;
             default:
                 throw new RuntimeException(String.format("No such OrderStatus exist : %s", statusString));
         }
