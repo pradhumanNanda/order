@@ -34,6 +34,10 @@ public class User {
 
     private boolean disabled;
 
+    @Transient
+    @Builder.Default
+    private boolean isDummyUser = false;
+
     public void setEmail(String email) {
         if(!Jutil.isNullOrEmpty(email)){
             this.email = email;

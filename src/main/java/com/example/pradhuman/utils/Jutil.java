@@ -1,11 +1,14 @@
 package com.example.pradhuman.utils;
 
 import com.example.pradhuman.entities.*;
+import com.github.javafaker.Faker;
 
+import java.security.GeneralSecurityException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,13 +103,13 @@ public class Jutil {
     }
 
     public static void validateUser(User user) throws ValidationException {
-        if(!isEmailValid(user.getEmail()))
+        if(!isEmailValid(user.getEmail()) && !user.isDummyUser())
             throw new ValidationException("please enter a valid email THANK YOU");
-        if(!isMobileValid(user.getMobile()))
+        if(!isMobileValid(user.getMobile()) && !user.isDummyUser() )
             throw new ValidationException("please enter a valid phone THANK YOU");
-        if(!isPincodeValid(user.getAddress().getPincode()))
+        if(!isPincodeValid(user.getAddress().getPincode()) && !user.isDummyUser())
             throw new ValidationException("please enter a valid pin code THANK YOU");
-        if(user.getPassword().length() < 7)
+        if(user.getPassword().length() < 7 && !user.isDummyUser())
             throw new ValidationException("Password length should be greater than 6");
     }
 
@@ -131,6 +134,7 @@ public class Jutil {
         for (Item i : order.getItems()){
             List<Item> items = new ArrayList<>();
             items.add(Item.builder().price(i.getPrice()).category(i.getCategory()).quantity(i.getQuantity()).build());
+            oldOrder.setItems(items);
             oldOrder.setItems(items);
         }
         if (isPriceValid(oldOrder)){
@@ -166,6 +170,25 @@ public class Jutil {
         }
 
         return strText.substring(0, start) + sbMaskString.toString() + strText.substring(start + maskLength);
+    }
+
+    public static List<User> createDummyUserList(int number) {
+        List<User> users = new ArrayList<>();
+        Faker faker = new Faker();
+        for (int i = 0; i <number; i++) {
+            try {
+                com.github.javafaker.Address address = faker.address();
+                User user = User.builder().userId(UUID.randomUUID().toString()).email(faker.bothify("???????###@gmail.com")).
+                        mobile(faker.phoneNumber().cellPhone()).password(PasswordManager.encrypt(faker.bothify
+                                ("?#?#?#?#?#??##"), PasswordManager.getSecretKey())).address
+                                (Address.builder().city(address.city()).state(address.state()).
+                                        pincode(address.zipCode()).build()).isDummyUser(true).build();
+                users.add(user);
+            } catch (GeneralSecurityException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return users;
     }
 
 }

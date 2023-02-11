@@ -20,6 +20,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public User getById(String id) {
         User user = userRepository.findById(id).orElse(User.builder().found(false).build());
+        if(!user.isFound()){
+            return user;
+        }
         try {
             user.setPassword(PasswordManager.decrypt(user.getPassword(), PasswordManager.getSecretKey()));
             user.setPassword(Jutil.maskString(user.getPassword(),
@@ -71,7 +74,8 @@ public class UserServiceImpl implements UserService{
             }
             return userRepository.save(oldUser);
         }
-        return User.builder().build();
+        user.setFound(false);
+        return user;
 
     }
 
@@ -84,5 +88,15 @@ public class UserServiceImpl implements UserService{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void createDummyUsers(int number) {
+        new Thread(){
+            @Override
+            public void run() {
+               userRepository.saveAll(Jutil.createDummyUserList(number));
+            }
+        }.start();
     }
 }

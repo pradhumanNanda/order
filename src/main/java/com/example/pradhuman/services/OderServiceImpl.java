@@ -2,6 +2,7 @@ package com.example.pradhuman.services;
 
 import com.example.pradhuman.entities.Order;
 import com.example.pradhuman.entities.OrderStatus;
+import com.example.pradhuman.entities.User;
 import com.example.pradhuman.repositories.OrderRepository;
 import com.example.pradhuman.repositories.UserRepository;
 import com.example.pradhuman.utils.Jutil;
@@ -28,8 +29,13 @@ public class OderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(Order order) throws UserNotFoundException {
-         if(!userRepository.findById(order.getUserId()).isPresent())
+         if(userRepository.findById(order.getUserId()).isPresent()){
+             if(userRepository.findById(order.getUserId()).get().isDisabled()){
+                 throw new UserNotFoundException(String.format("User is disabled %s", order.getUserId()));
+             }
+         }else {
              throw new UserNotFoundException(String.format("User not found for id : %s", order.getUserId()));
+         }
         if(Jutil.isPriceValid(order)){
             order.setOrderId(UUID.randomUUID().toString());
             order.setStatus(OrderStatus.SUCCESS.getStatus());
@@ -55,15 +61,19 @@ public class OderServiceImpl implements OrderService {
 
     @Override
     public Order updateOrder(Order order) throws UserNotFoundException {
+        Order oldOrder;
         if(orderRepository.findById(order.getOrderId()).isPresent() &&
          userRepository.findById(order.getUserId()).isPresent()){
-            Order oldOrder = orderRepository.findById(order.getOrderId()).get();
+             oldOrder = orderRepository.findById(order.getOrderId()).get();
             Jutil.getUpdatedOrder(oldOrder, order);
             if(oldOrder.getStatus().equals(OrderStatus.FAIL))
                 throw new RuntimeException("Items price Validation failed. price should be > 0");
+            orderRepository.save(oldOrder);
+        }else {
+            throw new UserNotFoundException(String.format("Oder or user for orderId : %s and userId : %s not found",
+                    order.getOrderId(),order.getUserId()));
         }
-        throw new UserNotFoundException(String.format("Oder or user for orderId : %s and userId : %s not found",
-                order.getOrderId(),order.getUserId()));
+        return oldOrder;
     }
 
     @Override

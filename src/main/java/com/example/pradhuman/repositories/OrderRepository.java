@@ -14,6 +14,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     @Query(value = "select * from order1 o where o.deleted is false ",nativeQuery = true)
     List<Order> getAllOrders();
 
-    @Query(value = "select * from order1 o where o.userId = :userId and o.deleted is false", nativeQuery = true)
+    @Query(value = "select * from order1 o where o.user_id = :userId and o.deleted is false", nativeQuery = true)
     List<Order> getAllOrdersByUserId(@Param("userId") String userId);
 }

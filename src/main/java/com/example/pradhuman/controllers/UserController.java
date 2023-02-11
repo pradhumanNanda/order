@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 @RestController
@@ -17,6 +18,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    public static int DEFAULT_DUMMY_NUMBER = 10;
 
     @PostMapping("/add")
     public BaseEntityResponse addUser(@RequestBody User user){
@@ -65,7 +68,7 @@ public class UserController {
         try {
             updatedUser = userService.updateUser(user);
         } catch (ValidationException e) {
-            response = UserResponse.getFailedResponse("Validation error Email , mobile");
+            response = UserResponse.getFailedResponse(e.getMessage());
             return response;
         }
         if(updatedUser.isFound()){
@@ -83,9 +86,22 @@ public class UserController {
                 "for id : %s", id)) : UserResponse.getFailedResponse(String.format("No user found for id : %s", id));
     }
 
+    @PostMapping("/create-dummy")
+    public String createDummy(@RequestParam(name = "number", required = false) Integer number){
+        number = number != null ? number : DEFAULT_DUMMY_NUMBER;
+       userService.createDummyUsers(number);
+       return String.format("Thread to create %s dummy users started", number);
+    }
+
+
     @ExceptionHandler({DataIntegrityViolationException.class})
     public BaseEntityResponse uniqueKeyVoilation(){
         return BaseEntityResponse.getFailedResponse("Email should be unique");
+    }
+
+    @ExceptionHandler({RuntimeException.class})
+    public BaseEntityResponse generalSecurityExHandler(RuntimeException e){
+        return BaseEntityResponse.getFailedResponse(e.getMessage());
     }
 
 }

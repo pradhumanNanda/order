@@ -7,6 +7,10 @@ import com.example.pradhuman.utils.BaseEntityResponse;
 import com.example.pradhuman.utils.OrderResponse;
 import com.example.pradhuman.utils.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -78,7 +82,7 @@ public class OrderController {
         BaseEntityResponse<Order> response;
         try {
             Order updatedOrder = orderService.updateOrder(order);
-            response =OrderResponse.getSuccessResponse(String.format("Successfully updated order for orderId : %s",
+            response = OrderResponse.getSuccessResponse(String.format("Successfully updated order for orderId : %s",
                     order.getOrderId()));
             response.setEntity(updatedOrder);
         } catch (UserNotFoundException e) {
@@ -97,6 +101,16 @@ public class OrderController {
             response = OrderResponse.getFailedResponse(e.getMessage());
         }
         return response;
+    }
+
+    @ExceptionHandler({InvalidDataAccessResourceUsageException.class})
+    public BaseEntityResponse sqlGrammarException(){
+        return BaseEntityResponse.getFailedResponse("Sql grammar exception");
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    public BaseEntityResponse httpMessageNotReadable(HttpMessageNotReadableException e){
+        return BaseEntityResponse.getFailedResponse(e.getMessage());
     }
 
 }
