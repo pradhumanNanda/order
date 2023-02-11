@@ -1,6 +1,7 @@
 package com.example.pradhuman.controllers;
 
 import com.example.pradhuman.entities.User;
+import com.example.pradhuman.entities.Wallet;
 import com.example.pradhuman.services.UserService;
 import com.example.pradhuman.utils.BaseEntityResponse;
 import com.example.pradhuman.utils.UserResponse;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.GeneralSecurityException;
 import java.util.List;
 
 @RestController
@@ -91,6 +91,18 @@ public class UserController {
         number = number != null ? number : DEFAULT_DUMMY_NUMBER;
        userService.createDummyUsers(number);
        return String.format("Thread to create %s dummy users started", number);
+    }
+
+    @GetMapping("/wallet/{userId}")
+    public BaseEntityResponse getWallet(@PathVariable String userId){
+        BaseEntityResponse<Wallet> response;
+        Wallet wallet = userService.getWallet(userId);
+        if(wallet == null){
+            return BaseEntityResponse.getFailedResponse(String.format("No wallet found for userId : %s", userId));
+        }
+        response = BaseEntityResponse.getSuccessResponse("Here's your wallet");
+        response.setEntity(wallet);
+        return response;
     }
 
 

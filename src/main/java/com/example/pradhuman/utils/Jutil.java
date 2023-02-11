@@ -49,19 +49,19 @@ public class Jutil {
         return isValid;
     }
 
-    public static boolean isPriceValid(Order order){
+    public static boolean isPriceValid(Order order) {
         double totalAmount = 0;
-        if(order.getItems().size() > 0){
-            for(Item i : order.getItems()){
-                if(i.getPrice() > 0){
+        if (order.getItems().size() > 0) {
+            for (Item i : order.getItems()) {
+                if (i.getPrice() > 0) {
                     totalAmount += i.getPrice() * i.getQuantity();
-                }else {
+                } else {
                     return false;
                 }
             }
             order.setTotalAmount(Jutil.formatDouble(totalAmount));
             return true;
-        }else {
+        } else {
             return false;
         }
 
@@ -103,21 +103,21 @@ public class Jutil {
     }
 
     public static void validateUser(User user) throws ValidationException {
-        if(!isEmailValid(user.getEmail()) && !user.isDummyUser())
+        if (!isEmailValid(user.getEmail()) && !user.isDummyUser())
             throw new ValidationException("please enter a valid email THANK YOU");
-        if(!isMobileValid(user.getMobile()) && !user.isDummyUser() )
+        if (!isMobileValid(user.getMobile()) && !user.isDummyUser())
             throw new ValidationException("please enter a valid phone THANK YOU");
-        if(!isPincodeValid(user.getAddress().getPincode()) && !user.isDummyUser())
+        if (!isPincodeValid(user.getAddress().getPincode()) && !user.isDummyUser())
             throw new ValidationException("please enter a valid pin code THANK YOU");
-        if(user.getPassword().length() < 7 && !user.isDummyUser())
+        if (user.getPassword().length() < 7 && !user.isDummyUser())
             throw new ValidationException("Password length should be greater than 6");
     }
 
     /**
      * @param oldUser user in db
-     * @param user  update user data
+     * @param user    update user data
      */
-    public static User getUpdatedUser(User oldUser, User user){
+    public static User getUpdatedUser(User oldUser, User user) {
         oldUser.setEmail(user.getEmail());
         oldUser.setDisabled(user.isDisabled());
         oldUser.setMobile(user.getMobile());
@@ -128,18 +128,18 @@ public class Jutil {
         return oldUser;
     }
 
-    public static Order getUpdatedOrder(Order oldOrder, Order order){
+    public static Order getUpdatedOrder(Order oldOrder, Order order) {
         oldOrder.setUserId(order.getUserId());
         oldOrder.setDeleted(order.isDeleted());
-        for (Item i : order.getItems()){
+        for (Item i : order.getItems()) {
             List<Item> items = new ArrayList<>();
             items.add(Item.builder().price(i.getPrice()).category(i.getCategory()).quantity(i.getQuantity()).build());
             oldOrder.setItems(items);
             oldOrder.setItems(items);
         }
-        if (isPriceValid(oldOrder)){
+        if (isPriceValid(oldOrder)) {
             oldOrder.setStatus(OrderStatus.SUCCESS.getStatus());
-        }else {
+        } else {
             oldOrder.setStatus(OrderStatus.FAIL.getStatus());
         }
         return oldOrder;
@@ -175,7 +175,7 @@ public class Jutil {
     public static List<User> createDummyUserList(int number) {
         List<User> users = new ArrayList<>();
         Faker faker = new Faker();
-        for (int i = 0; i <number; i++) {
+        for (int i = 0; i < number; i++) {
             try {
                 com.github.javafaker.Address address = faker.address();
                 User user = User.builder().userId(UUID.randomUUID().toString()).email(faker.bothify("???????###@gmail.com")).
@@ -189,6 +189,18 @@ public class Jutil {
             }
         }
         return users;
+    }
+
+    public static Wallet createWallet(User user) {
+        return Wallet.builder().userId(user.getUserId()).auditLogs(AuditLogs.CREATED.value).build();
+    }
+
+    public static List<Wallet> createWalletsForDummyUsers(List<User> users){
+        List<Wallet> walletList = new ArrayList<>();
+        for (User user: users) {
+            walletList.add(Wallet.builder().userId(user.getUserId()).auditLogs(AuditLogs.CREATED.value).build());
+        }
+        return walletList;
     }
 
 }

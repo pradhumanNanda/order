@@ -1,7 +1,7 @@
 package com.example.pradhuman.services;
 
 import com.example.pradhuman.entities.User;
-import com.example.pradhuman.utils.UserResponse;
+import com.example.pradhuman.entities.Wallet;
 import com.example.pradhuman.utils.ValidationException;
 
 import java.util.List;
@@ -13,6 +13,7 @@ public interface UserService {
     User updateUser(User user) throws ValidationException;
     boolean deleteUser(String id);
     void createDummyUsers(int number);
+    Wallet getWallet(String userId);
 
 
 }

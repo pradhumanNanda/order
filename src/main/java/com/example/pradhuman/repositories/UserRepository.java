@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
 
-    @Query(value = "Select * from new2 u where u.disabled is false", nativeQuery = true)
+    @Query(value = "Select * from user1 u where u.disabled is false", nativeQuery = true)
     List<User> getAllUsers();
 }

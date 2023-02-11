@@ -11,12 +11,12 @@ import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 
-@Entity(name = "new2")
+@Entity(name = "user")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@Table(indexes = {
+@Table(name = "user1", indexes = {
         @Index(name = "index1", columnList = "user_id", unique = true)
 })
 public class User {

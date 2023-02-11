@@ -1,19 +1,18 @@
 package com.example.pradhuman.controllers;
 
-import com.example.pradhuman.entities.Order;
-import com.example.pradhuman.entities.OrderStatus;
+import com.example.pradhuman.entities.*;
 import com.example.pradhuman.services.OrderService;
+import com.example.pradhuman.services.PaymentService;
 import com.example.pradhuman.utils.BaseEntityResponse;
 import com.example.pradhuman.utils.OrderResponse;
 import com.example.pradhuman.utils.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
-import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/order")
@@ -21,6 +20,9 @@ public class OrderController {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    PaymentService paymentService;
 
     @PostMapping("/create")
     public BaseEntityResponse createOrder(@RequestBody Order order) {
@@ -103,6 +105,28 @@ public class OrderController {
         return response;
     }
 
+    @PostMapping("/top-up")
+    public Payment topUp(@RequestBody Order order){
+        order.setOrderId(UUID.randomUUID().toString());
+        order.setStatus(OrderStatus.NEW.getStatus());
+        order.setOrderType(OrderType.TOP_UP);
+        return paymentService.createPayment(order, AuditLogs.TOP_UP);
+    }
+
+    @GetMapping("/payments/{orderId}")
+    public BaseEntityResponse getAllPaymentsByOrderId(@PathVariable String orderId){
+        BaseEntityResponse<Payment> response;
+        List<Payment> payments = paymentService.getAllPaymentsByOrderId(orderId);
+        if(payments.size() > 0){
+            response = BaseEntityResponse.getSuccessResponse("Here's all Payments");
+            response.setEntities(payments);
+        }else {
+            response = BaseEntityResponse.getFailedResponse(String.format("No payment found for OrderId %s", orderId));
+        }
+        return response;
+    }
+
+
     @ExceptionHandler({InvalidDataAccessResourceUsageException.class})
     public BaseEntityResponse sqlGrammarException(){
         return BaseEntityResponse.getFailedResponse("Sql grammar exception");
@@ -110,6 +134,11 @@ public class OrderController {
 
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public BaseEntityResponse httpMessageNotReadable(HttpMessageNotReadableException e){
+        return BaseEntityResponse.getFailedResponse(e.getMessage());
+    }
+
+    @ExceptionHandler({RuntimeException.class})
+    public BaseEntityResponse runTimeExHandler(RuntimeException e){
         return BaseEntityResponse.getFailedResponse(e.getMessage());
     }
 

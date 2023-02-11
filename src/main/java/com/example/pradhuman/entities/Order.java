@@ -5,17 +5,20 @@ import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Entity(name = "order1")
+@Entity(name = "order")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Data
 @Builder
 @AllArgsConstructor
+@Table(name = "order1")
+@NoArgsConstructor
 public class Order {
 
     @Id
@@ -28,6 +31,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private OrderType orderType = OrderType.BOOKING;
+
     @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
     private List<Item> items;
@@ -37,9 +44,9 @@ public class Order {
 
     private double totalAmount;
 
-    public Order() {
+    @Builder.Default
+    private Long paymentId = -1L;
 
-    }
 
     public void setUserId(String userId) {
         if(!Jutil.isNullOrEmpty(userId))

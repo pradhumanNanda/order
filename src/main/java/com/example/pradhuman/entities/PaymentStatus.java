@@ -7,5 +7,5 @@ public enum PaymentStatus {
     NOT_INITIATE, // when failed to create order i.e. order status FAILED
     PENDING, // when wallet does not have sufficient amount can be completed within 10 min
     ABORTED, // pending to aborted after 10 min timestamp
-    REJECTED; // user disabled
+    REJECTED; // user disabled or amount entered is not valid
 }
