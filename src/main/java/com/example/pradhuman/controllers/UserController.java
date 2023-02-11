@@ -105,6 +105,11 @@ public class UserController {
         return response;
     }
 
+    @GetMapping("/wallet/logs")
+    public List<String> getLogs(@RequestParam String userId){
+        return userService.getLogs(userId);
+    }
+
 
     @ExceptionHandler({DataIntegrityViolationException.class})
     public BaseEntityResponse uniqueKeyVoilation(){

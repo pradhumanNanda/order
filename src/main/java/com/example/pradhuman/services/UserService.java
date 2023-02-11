@@ -15,5 +15,7 @@ public interface UserService {
     void createDummyUsers(int number);
     Wallet getWallet(String userId);
 
+    List<String> getLogs(String userId);
+
 
 }

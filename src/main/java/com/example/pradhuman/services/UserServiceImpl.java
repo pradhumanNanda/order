@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -123,5 +124,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Wallet getWallet(String userId) {
        return walletRepository.getUserWallet(userId);
+    }
+
+    @Override
+    public List<String> getLogs(String userId) {
+        Wallet wallet = walletRepository.getUserWallet(userId);
+        if(wallet != null){
+           return Arrays.asList(wallet.getAuditLogs().split("#"));
+        }
+        return null;
     }
 }
