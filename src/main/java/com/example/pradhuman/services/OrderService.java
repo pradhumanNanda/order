@@ -14,4 +14,6 @@ public interface OrderService {
     Order getById(String id) throws RuntimeException;
     Order updateOrder(Order order) throws UserNotFoundException;
     boolean deleteOrder(String orderId) throws RuntimeException;
+    Order doRepayment(String orderId);
+    Order cancelOrder(String orderId);
 }

@@ -24,7 +24,7 @@ public enum OrderStatus {
                 return OrderStatus.SUCCESS;
             case "Fail":
                 return OrderStatus.FAIL;
-            case "Cancel":
+            case "Canceled":
                 return OrderStatus.CANCELED;
             default:
                 throw new RuntimeException(String.format("No such OrderStatus exist : %s", statusString));
