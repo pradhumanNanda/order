@@ -5,7 +5,10 @@ import lombok.Getter;
 
 @Getter
 public enum OrderStatus {
-    NEW("New"),SUCCESS("Success"),FAIL("Fail"),CANCELED("Canceled");
+    NEW("New") // payment pending
+    ,SUCCESS("Success") //on order completion
+    ,FAIL("Fail") //some checks failed
+    ,CANCELED("Canceled"); //canceled by user
 
     private String status;
 

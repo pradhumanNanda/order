@@ -26,9 +26,14 @@
             </fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
+                <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
+
+    <root level="debug">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </root>
 
 </configuration>

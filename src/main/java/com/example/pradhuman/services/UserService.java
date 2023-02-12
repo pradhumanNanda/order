@@ -1,5 +1,6 @@
 package com.example.pradhuman.services;
 
+import com.example.pradhuman.entities.Payment;
 import com.example.pradhuman.entities.User;
 import com.example.pradhuman.entities.Wallet;
 import com.example.pradhuman.utils.ValidationException;
@@ -14,8 +15,8 @@ public interface UserService {
     boolean deleteUser(String id);
     void createDummyUsers(int number);
     Wallet getWallet(String userId);
-
     List<String> getLogs(String userId);
+    Payment getPaymentById(Long id);
 
 
 }

@@ -37,6 +37,7 @@ public class PaymentServiceImpl implements PaymentService{
                 wallet.setAuditLogs(wallet.getAuditLogs() + auditLogs.value(order.getTotalAmount(),
                         order.getOrderId()));
                 payment.setPaymentStatus(PaymentStatus.SUCCESS);
+                payment.setAmount(Jutil.formatDouble(order.getTotalAmount()));
                 walletRepository.save(wallet);
                 order.setStatus(OrderStatus.SUCCESS.getStatus());
             }else {

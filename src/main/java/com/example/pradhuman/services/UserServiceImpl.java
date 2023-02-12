@@ -1,7 +1,9 @@
 package com.example.pradhuman.services;
 
+import com.example.pradhuman.entities.Payment;
 import com.example.pradhuman.entities.User;
 import com.example.pradhuman.entities.Wallet;
+import com.example.pradhuman.repositories.PaymentRepository;
 import com.example.pradhuman.repositories.UserRepository;
 import com.example.pradhuman.repositories.WalletRepository;
 import com.example.pradhuman.utils.Jutil;
@@ -26,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     WalletRepository walletRepository;
+
+    @Autowired
+    PaymentRepository paymentRepository;
 
 
     @Override
@@ -132,6 +137,13 @@ public class UserServiceImpl implements UserService {
         if(wallet != null){
            return Arrays.asList(wallet.getAuditLogs().split("#"));
         }
+        return null;
+    }
+
+    @Override
+    public Payment getPaymentById(Long id) {
+        if(paymentRepository.findById(id).isPresent())
+            return paymentRepository.findById(id).get();
         return null;
     }
 }

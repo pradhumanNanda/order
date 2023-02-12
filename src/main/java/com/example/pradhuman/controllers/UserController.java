@@ -1,5 +1,6 @@
 package com.example.pradhuman.controllers;
 
+import com.example.pradhuman.entities.Payment;
 import com.example.pradhuman.entities.User;
 import com.example.pradhuman.entities.Wallet;
 import com.example.pradhuman.services.UserService;
@@ -108,6 +109,15 @@ public class UserController {
     @GetMapping("/wallet/logs")
     public List<String> getLogs(@RequestParam String userId){
         return userService.getLogs(userId);
+    }
+
+    @GetMapping("/payment")
+    public Payment getPaymentById(@RequestParam Long id){
+        Payment payment = userService.getPaymentById(id);
+        if(payment == null){
+            throw new RuntimeException(String.format("No payment found for id : %s", id));
+        }
+        return payment;
     }
 
 

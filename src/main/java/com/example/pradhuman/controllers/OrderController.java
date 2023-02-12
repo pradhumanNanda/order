@@ -27,6 +27,7 @@ public class OrderController {
     @PostMapping("/create")
     public BaseEntityResponse createOrder(@RequestBody Order order) {
         BaseEntityResponse response;
+        order.setOrderId(UUID.randomUUID().toString());
         try {
             order.setStatus(OrderStatus.NEW.getStatus());
             orderService.createOrder(order);

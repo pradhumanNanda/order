@@ -25,6 +25,9 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
+    @Builder.Default
+    private Double amount = 0D;
+
     @Enumerated(EnumType.STRING)
     private  PaymentStatus paymentStatus;
 

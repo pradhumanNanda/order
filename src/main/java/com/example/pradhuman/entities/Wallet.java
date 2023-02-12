@@ -38,6 +38,7 @@ public class Wallet {
     @UpdateTimestamp
     private Calendar updateTm;
 
+    @Column(columnDefinition = "text")
     private String auditLogs;
 
 }
