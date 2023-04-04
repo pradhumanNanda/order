@@ -1,19 +1,25 @@
 package com.example.pradhuman.utils;
 
 import com.aerospike.client.AerospikeClient;
+import com.example.pradhuman.aerospike.AerospikeConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.stereotype.Service;
 
+@Service
+@EnableConfigurationProperties(AerospikeConfigurationProperties.class)
 public class AeroClient {
 
-    static String HOST = "0.0.0.0";
-    static Integer PORT = 3000;
-    public static final String NS = "orders";
+    @Autowired
+    AerospikeConfigurationProperties aerospikeConfigurationProperties;
 
-    public static final String ORDER_LIST = "order_list";
+    AerospikeClient aerospikeClient;
 
-    public static void save(){
+//    @Bean
+//    AerospikeClient getClient(){
+//        return new AerospikeClient(aerospikeConfigurationProperties.getHost(),
+//                aerospikeConfigurationProperties.getPort());
+//    }
 
-        AerospikeClient client = new AerospikeClient(HOST, PORT);
 
-
-    }
 }

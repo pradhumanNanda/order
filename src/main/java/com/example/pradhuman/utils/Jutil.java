@@ -180,7 +180,7 @@ public class Jutil {
                 com.github.javafaker.Address address = faker.address();
                 User user = User.builder().userId(UUID.randomUUID().toString()).email(faker.bothify("???????###@gmail.com")).
                         mobile(faker.phoneNumber().cellPhone()).password(PasswordManager.encrypt(faker.bothify
-                                ("?#?#?#?#?#??##"), PasswordManager.getSecretKey())).address
+                                ("?#?#?#?#?#??##"))).address
                                 (Address.builder().city(address.city()).state(address.state()).
                                         pincode(address.zipCode()).build()).isDummyUser(true).build();
                 users.add(user);

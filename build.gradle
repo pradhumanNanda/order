@@ -32,6 +32,8 @@ dependencies {
     implementation group: 'com.aerospike', name: 'aerospike-client', version: '4.0.2'
     implementation ('com.github.javafaker:javafaker:1.0.2') { exclude module: 'snakeyaml' }
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.30'
+    annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
+    implementation group: 'com.aerospike', name: 'spring-data-aerospike', version: '2.4.0.RELEASE'
 }
 
 tasks.named('test') {

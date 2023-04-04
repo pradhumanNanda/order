@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         try {
-            user.setPassword(PasswordManager.decrypt(user.getPassword(), PasswordManager.getSecretKey()));
+            user.setPassword(PasswordManager.decrypt(user.getPassword()));
             user.setPassword(Jutil.maskString(user.getPassword(),
                     2, user.getPassword().length() - 2, '*'));
 
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         List<User> users = userRepository.getAllUsers();
         users.stream().forEach((u) -> {
             try {
-                u.setPassword(PasswordManager.decrypt(u.getPassword(), PasswordManager.getSecretKey()));
+                u.setPassword(PasswordManager.decrypt(u.getPassword()));
                 u.setPassword(Jutil.maskString(u.getPassword(), 2, u.getPassword().length() - 2, '*'));
             } catch (Exception e) {
                 throw new RuntimeException("Error in decrypting password", e);
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
         Jutil.validateUser(user);
         user.setUserId(UUID.randomUUID().toString());
         try {
-            user.setPassword(PasswordManager.encrypt(user.getPassword(), PasswordManager.getSecretKey()));
+            user.setPassword(PasswordManager.encrypt(user.getPassword()));
         } catch (GeneralSecurityException e) {
             throw new RuntimeException("Error in password encryption");
         }
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
             Jutil.getUpdatedUser(oldUser, user);
             Jutil.validateUser(oldUser);
             try {
-                oldUser.setPassword(PasswordManager.encrypt(oldUser.getPassword(), PasswordManager.getSecretKey()));
+                oldUser.setPassword(PasswordManager.encrypt(oldUser.getPassword()));
             } catch (GeneralSecurityException e) {
                 throw new RuntimeException("Error in password Encryption");
             }
